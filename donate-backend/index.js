@@ -30,6 +30,8 @@ app.use(cors(corsOptions));
 // parse requests of content-type - application/json
 app.use(express.json());
 
+app.use(express.static("public"))
+
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,8 +42,10 @@ app.get("/", (req, res) => {
 
 // Routes
 const authRoute = require('./routes/auth');
+const itemRoute = require('./routes/items');
 
 app.use('/api/auth', authRoute);
+app.use('/api/items', itemRoute);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

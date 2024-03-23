@@ -74,7 +74,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
-            <div className="copy-right-area bg-f9fafb">
+            <div className="copy-right-area">
                 <div className="container">
                     <p>
                         Copyright <span>&copy;</span> {new Date().getFullYear()} Donate

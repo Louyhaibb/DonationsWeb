@@ -27,5 +27,5 @@ export const getHomeRouteForLoggedInUser = userRole => {
     if (userRole === 'admin') return '/admin/dashboard'
     if (userRole === 'donator') return '/donator/dashboard'
     if (userRole === 'needy') return '/needy/dashboard'
-    return '/login'
+    return '/sign-in'
 }

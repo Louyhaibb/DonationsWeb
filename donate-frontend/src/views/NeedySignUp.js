@@ -63,7 +63,7 @@ const NeedySignUp = () => {
             <div className="mb-4 d-flex justify-content-center">
               <img className="logo" src={logoImg} alt="SmartSitter" />
             </div>
-            <div className="row">
+            <div className="row mb-3">
               <div className="col-12">
                 <p className="body-meta">
                   Looking for care?{' '}

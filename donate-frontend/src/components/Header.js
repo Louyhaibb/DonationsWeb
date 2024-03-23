@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     Collapse,
     Navbar,
@@ -12,13 +12,17 @@ import {
     DropdownMenu,
     DropdownItem
 } from 'reactstrap';
-import { getToken, isUserLoggedIn } from '../utils/Utils';
-import { useAppSelector } from '../redux/store';
+import { isUserLoggedIn } from '../utils/Utils';
 import logoImg from '../assets/images/logo/logo.png';
-import { useLocation, useNavigate } from 'react-router-dom';
+import userImg from '../assets/images/user.png';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/api/userSlice';
+import { LogOut } from 'react-feather';
 
 const Header = () => {
-    const user = useAppSelector((state) => state.userState.user);
+    const dispatch = useDispatch();
+    const [userData, setUserData] = useState(null)
     const [isOpen, setIsOpen] = useState(false);
     const toggle = () => setIsOpen(!isOpen);
     const navigate = useNavigate();
@@ -27,13 +31,21 @@ const Header = () => {
 
     const currentRoute = location.pathname;
 
+    useEffect(() => {
+        if (isUserLoggedIn() !== null) {
+            setUserData(JSON.parse(localStorage.getItem('userData')))
+        }
+    }, []);
+
+    console.log(userData, '---------')
+
     return (
         <header>
-            <div>
+            <div className="container-fluid">
                 <Navbar expand="md">
                     <NavbarBrand
                         href={
-                            isLoggedIn ? (user?.role === 'admin' ? '/admin/dashboard' : user?.role === 'donator' ? '/donator/dashboard' : '/needy/dashboard') : '/'
+                            isLoggedIn ? (userData?.role === 'admin' ? '/admin/dashboard' : userData?.role === 'donator' ? '/donator/dashboard' : '/needy/dashboard') : '/'
                         }>
                         <img
                             src={logoImg}
@@ -47,15 +59,65 @@ const Header = () => {
                             {!isLoggedIn && (
                                 <>
                                     <NavItem className="nav-item-responsive">
-                                        <NavLink className={`px-2 ${currentRoute.includes('sign-in') ? 'active' : ''} border`} onClick={() => navigate('/sign-in')}>
+                                        <NavLink className={`${currentRoute.includes('sign-in') ? 'active' : ''}`} onClick={() => navigate('/sign-in')}>
                                             Sign In
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
-                                        <NavLink className={`px-2 ${currentRoute.includes('sign-up') ? 'active' : ''}`} onClick={() => navigate('/sign-up')}>
+                                        <NavLink className={`${currentRoute.includes('sign-up') ? 'active' : ''}`} onClick={() => navigate('/sign-up')}>
                                             Sign Up
                                         </NavLink>
                                     </NavItem>
+                                </>
+                            )}
+                            {isLoggedIn && userData?.role === 'admin' && (
+                                <>
+                                    <NavItem className="nav-item-responsive">
+                                        <NavLink className={currentRoute.includes('admin/dashboard') ? 'active' : ''} onClick={() => navigate('/admin/dashboard')}>
+                                            Home
+                                        </NavLink>
+                                    </NavItem>
+                                    <NavItem className="nav-item-responsive">
+                                        <NavLink className={currentRoute.includes('admin/users') ? 'active' : ''} onClick={() => navigate('/admin/users')}>
+                                            Users
+                                        </NavLink>
+                                    </NavItem>
+                                    <UncontrolledDropdown nav inNavbar>
+                                        <DropdownToggle nav caret onClick={e => e.preventDefault()}>
+                                            <img src={userData.avatar ? userData.avatar : userImg} alt="user" className="user-img" />
+                                        </DropdownToggle>
+                                        <DropdownMenu end>
+                                            <DropdownItem tag={Link} onClick={() => dispatch(logout())}>
+                                                <LogOut size={14} className="mr-50" />
+                                                <span className="align-middle mx-2">Log out</span>
+                                            </DropdownItem>
+                                        </DropdownMenu>
+                                    </UncontrolledDropdown>
+                                </>
+                            )}
+                            {isLoggedIn && userData?.role === 'donator' && (
+                                <>
+                                    <NavItem className="nav-item-responsive">
+                                        <NavLink className={currentRoute.includes('donator/dashboard') ? 'active' : ''} onClick={() => navigate('/donator/dashboard')}>
+                                            Home
+                                        </NavLink>
+                                    </NavItem>
+                                    <NavItem className="nav-item-responsive">
+                                        <NavLink className={currentRoute.includes('donator/items') ? 'active' : ''} onClick={() => navigate('/donator/items')}>
+                                            Items
+                                        </NavLink>
+                                    </NavItem>
+                                    <UncontrolledDropdown nav inNavbar>
+                                        <DropdownToggle nav caret onClick={e => e.preventDefault()}>
+                                            <img src={userData.avatar ? userData.avatar : userImg} alt="user" className="user-img" />
+                                        </DropdownToggle>
+                                        <DropdownMenu end>
+                                            <DropdownItem tag={Link} onClick={() => dispatch(logout())}>
+                                                <LogOut size={14} className="mr-50" />
+                                                <span className="align-middle mx-2">Log out</span>
+                                            </DropdownItem>
+                                        </DropdownMenu>
+                                    </UncontrolledDropdown>
                                 </>
                             )}
                         </Nav>

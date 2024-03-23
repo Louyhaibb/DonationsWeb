@@ -26,6 +26,41 @@ const userSchema = new mongoose.Schema({
         enum: ['admin', 'donator', 'needy'],
         required: true,
     },
+    age: {
+        type: Number,
+        required: false,
+    },
+    gender: {
+        type: String,
+        enum: ['Male', 'Female', ''],
+        default: '',
+    },
+    children: {
+        type: String,
+        enum: ['Yes', 'No', ''],
+        default: '',
+    },
+    married: {
+        type: String,
+        enum: ['Yes', 'No', ''],
+        default: '',
+    },
+    city: {
+        type: String,
+        required: false,
+    },
+    shirtSize: {
+        type: String,
+        required: false,
+    },
+    bottomSize: {
+        type: String,
+        required: false,
+    },
+    shoeSize: {
+        type: String,
+        required: false,
+    },
     status: {
         type: String,
         enum: ['pending', 'active', 'declined', 'deleted', ''],

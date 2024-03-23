@@ -12,21 +12,26 @@ const SignUp = () => {
               <img className="logo" src={logoImg} alt="Donate" />
             </div>
 
-            <div className="row">
+            <div className="row mb-3">
               <div className="col-12">
                 <h1 className="heading-3 form-title">I am going to be a ...</h1>
               </div>
             </div>
             <Row className="my-3">
               <Col md="6" sm="12">
-                <a href="/donator-signup">
-                  <div className="register-type">Donator</div>
-                </a>
+                <div className='p-1'>
+                    <a href="/donator-signup">
+                    <div className="register-type">Donator</div>
+                    </a>
+                </div>
               </Col>
               <Col md="6" sm="12">
-                <a href="/needy-signup">
-                  <div className="register-type">Needy</div>
-                </a>
+                <div className='p-1'>
+                    <a href="/needy-signup">
+                    <div className="register-type">Needy</div>
+                    </a>
+                </div>
+                
               </Col>
             </Row>
           </CardBody>
