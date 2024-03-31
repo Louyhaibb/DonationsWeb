@@ -18,7 +18,7 @@ import userImg from '../assets/images/user.png';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { logout } from '../redux/api/userSlice';
-import { LogOut } from 'react-feather';
+import { LogOut, User } from 'react-feather';
 
 const Header = () => {
     const dispatch = useDispatch();
@@ -36,8 +36,6 @@ const Header = () => {
             setUserData(JSON.parse(localStorage.getItem('userData')))
         }
     }, []);
-
-    console.log(userData, '---------')
 
     return (
         <header>
@@ -112,6 +110,35 @@ const Header = () => {
                                             <img src={userData.avatar ? userData.avatar : userImg} alt="user" className="user-img" />
                                         </DropdownToggle>
                                         <DropdownMenu end>
+                                            <DropdownItem tag={Link} onClick={() => dispatch(logout())}>
+                                                <LogOut size={14} className="mr-50" />
+                                                <span className="align-middle mx-2">Log out</span>
+                                            </DropdownItem>
+                                        </DropdownMenu>
+                                    </UncontrolledDropdown>
+                                </>
+                            )}
+                            {isLoggedIn && userData?.role === 'needy' && (
+                                <>
+                                    <NavItem className="nav-item-responsive">
+                                        <NavLink className={currentRoute.includes('needy/dashboard') ? 'active' : ''} onClick={() => navigate('/needy/dashboard')}>
+                                            Home
+                                        </NavLink>
+                                    </NavItem>
+                                    <NavItem className="nav-item-responsive">
+                                        <NavLink className={currentRoute.includes('needy/donation-items') ? 'active' : ''} onClick={() => navigate('/needy/donation-items')}>
+                                            Donation Items
+                                        </NavLink>
+                                    </NavItem>
+                                    <UncontrolledDropdown nav inNavbar>
+                                        <DropdownToggle nav caret onClick={e => e.preventDefault()}>
+                                            <img src={userData.avatar ? userData.avatar : userImg} alt="user" className="user-img" />
+                                        </DropdownToggle>
+                                        <DropdownMenu end>
+                                            <DropdownItem tag={Link} to="/needy/profile">
+                                                <User size={14} className="mr-50" />
+                                                <span className="align-middle mx-2">Profile</span>
+                                            </DropdownItem>
                                             <DropdownItem tag={Link} onClick={() => dispatch(logout())}>
                                                 <LogOut size={14} className="mr-50" />
                                                 <span className="align-middle mx-2">Log out</span>

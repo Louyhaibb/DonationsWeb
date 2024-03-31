@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 // ** Checks if an object is empty (returns boolean)
 export const isObjEmpty = obj => Object.keys(obj).length === 0
 
@@ -28,4 +30,27 @@ export const getHomeRouteForLoggedInUser = userRole => {
     if (userRole === 'donator') return '/donator/dashboard'
     if (userRole === 'needy') return '/needy/dashboard'
     return '/sign-in'
+}
+
+export const getDateFormat = (formattedDate) => {
+    const formattedDateMoment = moment(`${formattedDate}`, 'YYYY-MM-DD HH:mm A');
+    const formattedDateTime = moment(formattedDateMoment).format('llll');
+    return formattedDateTime;
+  };
+
+export const calculateProfilePercentage = (profileData) => {
+    let filledFields = 0;
+    
+    if (profileData.firstName) filledFields += 5;
+    if (profileData.lastName) filledFields += 5;
+    if (profileData.age) filledFields += 10;
+    if (profileData.children) filledFields += 5;
+    if (profileData.married) filledFields += 5;
+    if (profileData.gender) filledFields += 5;
+    if (profileData.city) filledFields += 10;
+    if (profileData.shirtSize) filledFields += 10;
+    if (profileData.bottomSize) filledFields += 10;
+    if (profileData.shoeSize) filledFields += 10;
+    
+    return (filledFields / 75) * 100;
 }

@@ -14,6 +14,7 @@ import RequiredUser from './components/RequiredUser';
 import CreateItem from './views/donator/CreateItem';
 import ItemList from './views/donator/ItemList';
 import UpdateItem from './views/donator/UpdateItem';
+import NeedyProfile from './views/profile/NeedyProfile';
 
 const App = () => {
   const HomeRoute = () => {
@@ -41,6 +42,9 @@ const App = () => {
             <Route path="donator/items" element={<ItemList />} />
             <Route path="donator/items/create-item" element={<CreateItem />} />
             <Route path="donator/items/update-item/:id" element={<UpdateItem />} />
+          </Route>
+          <Route element={<RequiredUser allowedRoles={['needy']} />}>
+            <Route path="needy/profile" element={<NeedyProfile />} />
           </Route>
         </Route>
         <Route path="admin/sign-in" element={<AdminSignIn />} />

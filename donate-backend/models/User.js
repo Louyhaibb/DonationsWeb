@@ -66,6 +66,10 @@ const userSchema = new mongoose.Schema({
         enum: ['pending', 'active', 'declined', 'deleted', ''],
         default: '',
     },
+    city: {
+        type: String,
+        required: false,
+    },
     lastLogin: {
         type: Date,
     },

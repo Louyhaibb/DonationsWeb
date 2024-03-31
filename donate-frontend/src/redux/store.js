@@ -4,12 +4,14 @@ import { authAPI } from './api/authAPI';
 import { getMeAPI } from './api/getMeAPI';
 import userReducer from './api/userSlice';
 import { itemAPI } from './api/itemAPI';
+import { userAPI } from './api/userAPI';
 
 export const store = configureStore({
     reducer: {
       [authAPI.reducerPath]: authAPI.reducer,
       [getMeAPI.reducerPath]: getMeAPI.reducer,
       [itemAPI.reducerPath]: itemAPI.reducer,
+      [userAPI.reducerPath]: userAPI.reducer,
 
       userState: userReducer,
     },
@@ -19,6 +21,7 @@ export const store = configureStore({
         authAPI.middleware,
         getMeAPI.middleware,
         itemAPI.middleware,
+        userAPI.middleware,
       ])
   });
   

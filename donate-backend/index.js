@@ -42,9 +42,11 @@ app.get("/", (req, res) => {
 
 // Routes
 const authRoute = require('./routes/auth');
+const userRoute = require('./routes/users');
 const itemRoute = require('./routes/items');
 
 app.use('/api/auth', authRoute);
+app.use('/api/users', userRoute);
 app.use('/api/items', itemRoute);
 
 // set port, listen for requests
