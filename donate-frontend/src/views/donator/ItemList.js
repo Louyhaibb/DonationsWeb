@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import { Fragment, useEffect, useState } from 'react';
 import DataTable from 'react-data-table-component';
 import { useNavigate } from 'react-router-dom';
@@ -18,12 +17,29 @@ import {
     ModalBody,
     ModalFooter
 } from 'reactstrap';
-import { ChevronDown, MoreVertical, Trash2, Plus, Edit, Activity } from 'react-feather';
+import { ChevronDown, MoreVertical, Trash2, Edit } from 'react-feather';
 import toast from 'react-hot-toast';
-import { useDeleteItemMutation, useGetItemsQuery, useManageStatusItemMutation } from '../../redux/api/itemAPI';
+import { useDeleteItemMutation, useGetItemsQuery } from '../../redux/api/itemAPI';
 
 const renderStatus = (row) => {
-    const color = row.status === 'active' ? 'light-success' : row.status === 'disabled' ? 'light-info' : 'light-danger';
+    let color;
+    switch (row.status) {
+        case 'approved':
+            color = 'success';
+            break;
+
+        case 'donating':
+            color = 'warning';
+            break;
+
+        case 'deleted':
+            color = 'danger';
+            break;
+
+        default:
+            color = 'primary';
+            break;
+    }
     return (
         <span className="text-truncate text-capitalize align-middle">
             <Badge color={color} pill>
@@ -46,8 +62,6 @@ const ItemList = () => {
     const { data: items } = useGetItemsQuery({ refetchOnFocus: true, refetchOnReconnect: true });
 
     const [modalVisibility, setModalVisibility] = useState(false);
-    const [manageStatus, { isLoading: manageIsLoading, isError: manageIsError, isSuccess: manageIsSuccess, error: manageError }] =
-        useManageStatusItemMutation();
     const [deleteItem, { isLoading, isError, error, isSuccess }] = useDeleteItemMutation();
     useEffect(() => {
         if (isSuccess) {
@@ -68,32 +82,10 @@ const ItemList = () => {
             });
         }
     }, [isLoading]);
-    useEffect(() => {
-        if (manageIsSuccess) {
-            toast.success(
-                <div className="d-flex align-items-center">
-                    <span className="toast-title">Status changed successfully</span>
-                </div>,
-                {
-                    duration: 2000,
-                    position: 'top-right'
-                }
-            );
-            navigate('/donator/items');
-        }
-        if (manageIsError) {
-            toast.error(manageError.data.message, {
-                position: 'top-right'
-            });
-        }
-    }, [manageIsLoading]);
+
     const handleDeleteItem = async (id) => {
         await deleteItem(id);
         setModalVisibility(false);
-    };
-
-    const handleManageStatus = (id, status) => {
-        manageStatus({ id: id, status: { status: status } });
     };
 
     const columns = () => [
@@ -155,7 +147,7 @@ const ItemList = () => {
 
                 return (
                     <>
-                        {row.status !== 'deleted' && (
+                        {row.status === 'donating' && (
                             <>
                                 <UncontrolledDropdown>
                                     <DropdownToggle tag="div" className="btn btn-sm">
@@ -203,8 +195,7 @@ const ItemList = () => {
                 <Row className="my-3">
                     <Col md="4">
                         <Button size="sm" color="orange" onClick={() => navigate('/donator/items/create-item')}>
-                            <Plus size={14} />
-                            <span className="align-middle "> Create Item </span>
+                            Create Item
                         </Button>
                     </Col>
                 </Row>

@@ -2,16 +2,22 @@ const Item = require("../models/Item");
 const mongoose = require('mongoose');
 
 const getItems = async (req, res) => {
-    const filterQuery = {
-        $or: [
-            { createBy: req.user._id },
-            { requestBy: req.user._id }
-        ],
-        status: { $ne: 'deleted' }
+    const statusFilter = req.query.status !== '' && typeof req.query.status !== 'undefined' ? { status: req.query.status } : { status: { $ne: 'deleted' } };
+    const colorFilter = req.query.color !== '' && typeof req.query.color !== 'undefined' ? { color: req.query.color } : {};
+    const sizeFilter = req.query.size !== '' && typeof req.query.size !== 'undefined' ? { size: req.query.size } : {};
+    const conditionFilter = req.query.condition !== '' && typeof req.query.condition !== 'undefined' ? { condition: req.query.condition } : {};
+    const baseQuery = req.user.role == 'donator' ? { createBy: req.user._id } : {};
+
+    const filterParams = {
+        ...baseQuery,
+        ...statusFilter,
+        ...colorFilter,
+        ...sizeFilter,
+        ...conditionFilter
     };
 
     try {
-        const items = await Item.find(filterQuery)
+        const items = await Item.find(filterParams)
             .populate({
                 path: 'createBy'
             })
@@ -35,7 +41,7 @@ const createItem = async (req, res) => {
         size: req.body.size ? req.body.size : '',
         color: req.body.color ? req.body.color : '',
         image: req.body.image ? req.body.image : '',
-        status: '',
+        status: 'donating',
         createBy: req.user._id
     });
 
@@ -79,18 +85,6 @@ const deleteItem = async (req, res) => {
     }
 }
 
-const manageItemStatus = async (req, res) => {
-    const updateValues = req.body;
-    try {
-        await Item.findOneAndUpdate({ _id: req.params.id }, updateValues, {
-            new: true,
-        });
-        return res.send({ status: 'success', message: 'Item Status successfully updated' });
-    } catch(error) {
-        return res.status(500).send({ status: 'error', message: error.toString() })
-    }
-};
-
 const getItem = async (req, res) => {
 
     if (!mongoose.isValidObjectId(req.params.id)) {
@@ -110,7 +104,6 @@ module.exports = {
     createItem,
     itemImage,
     deleteItem,
-    manageItemStatus,
     getItem,
     updateItem,
 }

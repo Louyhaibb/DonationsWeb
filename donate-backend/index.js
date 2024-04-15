@@ -44,10 +44,12 @@ app.get("/", (req, res) => {
 const authRoute = require('./routes/auth');
 const userRoute = require('./routes/users');
 const itemRoute = require('./routes/items');
+const itemRequestRoute = require('./routes/itemRequests');
 
 app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/items', itemRoute);
+app.use('/api/itemRequests', itemRequestRoute);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

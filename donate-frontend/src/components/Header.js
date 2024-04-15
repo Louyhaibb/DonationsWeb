@@ -43,7 +43,7 @@ const Header = () => {
                 <Navbar expand="md">
                     <NavbarBrand
                         href={
-                            isLoggedIn ? (userData?.role === 'admin' ? '/admin/dashboard' : userData?.role === 'donator' ? '/donator/dashboard' : '/needy/dashboard') : '/'
+                            isLoggedIn ? (userData?.role === 'admin' ? '/admin/dashboard' : userData?.role === 'donator' ? '/donator/items' : '/needy/profile') : '/'
                         }>
                         <img
                             src={logoImg}
@@ -96,13 +96,13 @@ const Header = () => {
                             {isLoggedIn && userData?.role === 'donator' && (
                                 <>
                                     <NavItem className="nav-item-responsive">
-                                        <NavLink className={currentRoute.includes('donator/dashboard') ? 'active' : ''} onClick={() => navigate('/donator/dashboard')}>
-                                            Home
+                                        <NavLink className={currentRoute.includes('donator/items') ? 'active' : ''} onClick={() => navigate('/donator/items')}>
+                                            Items
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
-                                        <NavLink className={currentRoute.includes('donator/items') ? 'active' : ''} onClick={() => navigate('/donator/items')}>
-                                            Items
+                                        <NavLink className={currentRoute.includes('donator/donation-requests') ? 'active' : ''} onClick={() => navigate('/donator/donation-requests')}>
+                                            Donate Requests
                                         </NavLink>
                                     </NavItem>
                                     <UncontrolledDropdown nav inNavbar>
@@ -121,13 +121,13 @@ const Header = () => {
                             {isLoggedIn && userData?.role === 'needy' && (
                                 <>
                                     <NavItem className="nav-item-responsive">
-                                        <NavLink className={currentRoute.includes('needy/dashboard') ? 'active' : ''} onClick={() => navigate('/needy/dashboard')}>
-                                            Home
+                                        <NavLink className={currentRoute.includes('needy/donation-items') ? 'active' : ''} onClick={() => navigate('/needy/donation-items')}>
+                                            Donate Items
                                         </NavLink>
                                     </NavItem>
                                     <NavItem className="nav-item-responsive">
-                                        <NavLink className={currentRoute.includes('needy/donation-items') ? 'active' : ''} onClick={() => navigate('/needy/donation-items')}>
-                                            Donation Items
+                                        <NavLink className={currentRoute.includes('needy/donation-requests') ? 'active' : ''} onClick={() => navigate('/needy/donation-requests')}>
+                                            Donate Requests
                                         </NavLink>
                                     </NavItem>
                                     <UncontrolledDropdown nav inNavbar>

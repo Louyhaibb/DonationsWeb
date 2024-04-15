@@ -22,7 +22,7 @@ const UpdateItem = () => {
         control,
         setValue,
     } = useForm();
-    const { data: item } = useGetItemQuery(id);
+    const { data: item, refetch } = useGetItemQuery(id);
     const navigate = useNavigate();
     const acceptedImageFormats = 'image/jpeg, image/png, image/jpg, image/svg+xml';
 
@@ -77,6 +77,9 @@ const UpdateItem = () => {
             setItemImage(item.image);
         }
     }, [setValue, item]);
+    useEffect(() => {
+        refetch();
+    }, []);
 
     const onSubmit = async (data) => {
         data.image = itemImage;

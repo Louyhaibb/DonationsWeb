@@ -11,7 +11,7 @@ const itemSchema = new mongoose.Schema({
     },
     condition: {
         type: String,
-        enum: ['New', 'Like New', 'Used', 'Bad Condtion'],
+        enum: ['New', 'Like New', 'Used', 'Bad Condition'],
         required: true,
     },
     gender: {
@@ -33,8 +33,8 @@ const itemSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['request', 'approved', 'declined', 'deleted', ''],
-        default: '',
+        enum: ['approved', 'deleted', 'donating'],
+        default: 'donating',
     },
     createBy: {
         type: mongoose.Schema.Types.ObjectId,
@@ -45,9 +45,6 @@ const itemSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: false,
-    },
-    lastLogin: {
-        type: Date,
     },
 }, {
     timestamps: {

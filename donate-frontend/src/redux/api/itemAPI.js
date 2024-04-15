@@ -94,18 +94,6 @@ export const itemAPI = createApi({
       invalidatesTags: [{ type: 'Items', id: 'LIST' }],
       transformResponse: (result) => result.item
     }),
-    manageStatusItem: builder.mutation({
-      query({ id, status }) {
-        return {
-          url: `/manageStatus/${id}`,
-          method: 'PUT',
-          credentials: 'include',
-          body: status
-        };
-      },
-      invalidatesTags: [{ type: 'Items', id: 'LIST' }],
-      transformResponse: (result) => result
-    }),
     deleteItem: builder.mutation({
       query(id) {
         return {
@@ -141,6 +129,5 @@ export const {
   useCreateItemMutation,
   useUpdateItemMutation,
   useDeleteItemMutation,
-  useManageStatusItemMutation,
   useUploadItemImageMutation,
 } = itemAPI;
