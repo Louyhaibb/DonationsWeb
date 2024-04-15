@@ -17,11 +17,11 @@ const upload = multer({
     storage: storage
 })
 
-router.get('/', verifyToken(['donator', 'needy']), getItems);
+router.get('/', verifyToken(['donator', 'needy', 'admin']), getItems);
 router.post('/create', verifyToken(['donator']), createItem);
 router.post('/upload/image', upload.single('image'), verifyToken(['donator']), itemImage);
 router.delete('/delete/:id', verifyToken(['donator']), deleteItem);
-router.get('/getItem/:id', verifyToken(['donator', 'needy']), getItem);
+router.get('/getItem/:id', verifyToken(['donator', 'needy', 'admin']), getItem);
 router.put('/update/:id', verifyToken(['donator']), updateItem);
 
 module.exports = router;

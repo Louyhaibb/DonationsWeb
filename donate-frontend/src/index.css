@@ -740,6 +740,10 @@ a {
   background: rgba(255, 159, 67, 0.12) !important;
 }
 
+.bg-orange {
+  background: rgba(234, 84, 85, 0.12) !important;
+  color: #f7941d !important;
+}
 
 
 

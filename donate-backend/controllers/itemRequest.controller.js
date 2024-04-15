@@ -73,6 +73,7 @@ const manageItemRequestStatus = async (req, res) => {
         });
 
         if (updateValues.status == 'approved') {
+            updateValues.requestBy = itemRequest.requestBy;
             await Item.findOneAndUpdate({ _id: itemRequest.item }, updateValues, {
                 new: true,
             });

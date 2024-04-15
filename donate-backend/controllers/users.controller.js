@@ -1,9 +1,11 @@
-const router = require('express').Router();
 const User = require("../models/User");
-const verifyToken = require('../utils/verifyToken');
 const mongoose = require('mongoose');
 const multer = require("multer");
 const path = require("path");
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+
+const saltLength = 10;
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -86,6 +88,35 @@ const updateUser = async (req, res) => {
     return res.send({ updatedUser: updatedUser, message: 'User successfully updated' });
 };
 
+const createUser = async (req, res) => {
+    const emailExists = await User.findOne({ email: req.body.email });
+    if (emailExists) { return res.status(400).send({ message: 'Email already exists' }); }
+
+    // hash the password
+    const salt = await bcrypt.genSalt(saltLength);
+    const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+    const user = new User({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        email: req.body.email,
+        password: hashPassword,
+        role: req.body.role,
+        status: req.body.role == 'admin' || req.body.role == 'donator' ? 'active' : 'pending'
+    });
+
+    try {
+        const savedUser = await user.save();
+
+        // remove password
+        delete savedUser._doc.password;
+
+        return res.send({ user: savedUser, message: 'User successfully created' });
+    } catch (err) {
+        return res.status(400).send(err);
+    }
+}
+
 module.exports ={
     personalMe,
     getUsers,
@@ -93,4 +124,5 @@ module.exports ={
     deleteUser,
     manageStatus,
     updateUser,
+    createUser,
 }

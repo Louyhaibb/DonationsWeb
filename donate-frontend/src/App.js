@@ -19,6 +19,11 @@ import DonateItems from './views/needy/DonateItems';
 import DonateItemDetail from './views/needy/DonateItemDetail';
 import DonateItemRequests from './views/needy/DonateItemRequests';
 import DonatorItemRequests from './views/donator/DonatorItemRequests';
+import UserList from './views/admin/users/UserList';
+import CreateUser from './views/admin/users/CreateUser';
+import UpdateUser from './views/admin/users/UpdateUser';
+import DonateList from './views/admin/donation/DonateList';
+import DonateDetail from './views/admin/donation/DonateDetail';
 
 const App = () => {
   const HomeRoute = () => {
@@ -41,6 +46,11 @@ const App = () => {
           <Route index element={<HomeRoute />} />
           <Route element={<RequiredUser allowedRoles={['admin']} />}>
             <Route path="admin/dashboard" element={<AdminDashboard />} />
+            <Route path="admin/users" element={<UserList />} />
+            <Route path="admin/users/create-user" element={<CreateUser />} />
+            <Route path="admin/users/update-user/:id" element={<UpdateUser />} />
+            <Route path="admin/donations" element={<DonateList />} />
+            <Route path="admin/donations/detail/:id" element={<DonateDetail />} />
           </Route>
           <Route element={<RequiredUser allowedRoles={['donator']} />}>
             <Route path="donator/items" element={<ItemList />} />

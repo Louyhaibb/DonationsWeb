@@ -80,6 +80,11 @@ const Header = () => {
                                             Users
                                         </NavLink>
                                     </NavItem>
+                                    <NavItem className="nav-item-responsive">
+                                        <NavLink className={currentRoute.includes('admin/donations') ? 'active' : ''} onClick={() => navigate('/admin/donations')}>
+                                            Donations
+                                        </NavLink>
+                                    </NavItem>
                                     <UncontrolledDropdown nav inNavbar>
                                         <DropdownToggle nav caret onClick={e => e.preventDefault()}>
                                             <img src={userData.avatar ? userData.avatar : userImg} alt="user" className="user-img" />

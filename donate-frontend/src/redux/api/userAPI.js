@@ -31,6 +31,18 @@ export const userAPI = createApi({
       invalidatesTags: [{ type: 'Users', id: 'LIST' }],
       transformResponse: (result) => result.user
     }),
+    createUser: builder.mutation({
+      query(payload) {
+        return {
+          url: '/create',
+          method: 'POST',
+          credentials: 'include',
+          body: payload
+        };
+      },
+      invalidatesTags: [{ type: 'Users', id: 'LIST' }],
+      transformResponse: (result) => result.user
+    }),
     getUsers: builder.query({
       query: (args) => {
         return {
@@ -113,4 +125,5 @@ export const {
   useUpdateUserMutation,
   useDeleteUserMutation,
   useManageStatusUserMutation,
+  useCreateUserMutation,
 } = userAPI;

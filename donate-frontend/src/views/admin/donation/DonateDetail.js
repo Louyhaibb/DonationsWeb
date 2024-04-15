@@ -1,73 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useParams } from "react-router-dom";
 import { Button, Card, CardBody, Col, Container, Modal, ModalBody, ModalFooter, ModalHeader, Row } from "reactstrap";
-import { useGetItemQuery } from "../../redux/api/itemAPI";
+import { useGetItemQuery } from "../../../redux/api/itemAPI";
 import { useEffect, useState } from "react";
-import PreloadComponent from "../../components/PreloadComponent";
-import { calculateProfilePercentage, getDateFormat } from "../../utils/Utils";
-import { getMeAPI } from "../../redux/api/getMeAPI";
+import PreloadComponent from "../../../components/PreloadComponent";
+import { getDateFormat } from "../../../utils/Utils";
 import { useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { useCreateItemRequestMutation } from "../../redux/api/itemRequestAPI";
 
-const DonateItemDetail = () => {
+const DonateDetail = () => {
     const { id } = useParams();
     const { data: item, isLoading, refetch } = useGetItemQuery(id);
-    const { data: userData } = getMeAPI.endpoints.getMe.useQuery(null);
     const [modalVisibility, setModalVisibility] = useState(false);
-    const [createItemRequest, { isLoading: requestLoading, isSuccess, error, isError}] = useCreateItemRequestMutation();
     const navigate = useNavigate();
-    const [isProcessing, setIsProcessing] = useState(false);
 
     useEffect(() => {
         refetch();
     }, []);
-
-    useEffect(() => {
-        if (item && item.status === 'approved') {
-            setIsProcessing(true);
-        }
-    }, [item]);
-
-
-
-    useEffect(() => {
-        if (isSuccess) {
-            toast.success(
-                <div className="d-flex align-items-center">
-                    <span className="toast-title">Item Request successfully created</span>
-                </div>,
-                {
-                    duration: 2000,
-                    position: 'top-right'
-                }
-            );
-        }
-
-        if (isError) {
-            toast.error(
-                <div className="d-flex align-items-center">
-                    <span className="toast-title">{error.data.message}</span>
-                </div>,
-                {
-                    duration: 2000,
-                    position: 'top-right'
-                }
-            );
-        }
-    }, [requestLoading]);
-
-    const handleRequest = () => {
-        const profilePercent = calculateProfilePercentage(userData);
-        if (profilePercent !== 100) {
-            setModalVisibility(!modalVisibility);
-        } else {
-            const data = {
-                itemId: id
-            }
-            createItemRequest(data);
-        }
-    }
 
     return (
         <div className="main-view">
@@ -75,27 +23,22 @@ const DonateItemDetail = () => {
                 {!isLoading ? (
                     <>
                         <Card>
-                            <CardBody>
+                            <CardBody className="mx-3">
                                 <div>
                                     <Button color="light" onClick={() => window.history.back()}>
                                         &lt; back to list
                                     </Button>
                                 </div>
-                                <Row className="my-3">
+                                <Row className="mt-3">
                                     <Col>
                                         <h4 className="main-title">{item.title}</h4>
                                     </Col>
                                 </Row>
                                 <Row>
                                     <Col md="12">
-                                        <div className="my-1">
-                                            <Button size="sm" color="orange" onClick={handleRequest} disabled={isProcessing}>
-                                                Request Donation
-                                            </Button>
-                                        </div>
                                         <div className="autor-infor">
                                             <div className="author-title">
-                                                Donaton: {item.createBy?.firstName} {item.createBy?.lastName}
+                                                Donator: {item.createBy?.firstName} {item.createBy?.lastName}
                                             </div>
                                         </div>
                                         <div className="last-updated-on">
@@ -103,6 +46,18 @@ const DonateItemDetail = () => {
                                                 <small>Created on: </small>
                                             </span>
                                             <span className="view" title="createdAt">{getDateFormat(item.createdAt)}</span>
+                                        </div>
+                                        <div className="last-updated-on">
+                                            <span className="auth-label">
+                                                <small>Approved on: </small>
+                                            </span>
+                                            <span className="view" title="requestAt">{getDateFormat(item.updatedAt)}</span>
+                                        </div>
+                                        <div className="my-1">
+                                            <span className="auth-label">
+                                                <small>Needy: </small>
+                                            </span>
+                                            <span className="view" title="Needy"><small>Anonymous</small></span>
                                         </div>
                                         <div className="my-1">
                                             <span className="auth-label">
@@ -133,6 +88,7 @@ const DonateItemDetail = () => {
                                                 <img src={item.image} className="item-img" alt="Donate" />
                                             </div>
                                         )}
+
                                         <div className="info-details">
                                             <article className="my-3">
                                                 <p>{item.description}</p>
@@ -166,4 +122,4 @@ const DonateItemDetail = () => {
     )
 };
 
-export default DonateItemDetail;
+export default DonateDetail;
