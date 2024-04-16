@@ -63,7 +63,7 @@ export const itemAPI = createApi({
           if (error.error.originalStatus === 401) {
             removeToken();
             removeUserData();
-            navigate('/login');
+            navigate('/sign-in');
           }
         }
       }

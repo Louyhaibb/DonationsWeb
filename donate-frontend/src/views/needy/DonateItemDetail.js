@@ -95,7 +95,7 @@ const DonateItemDetail = () => {
                                         </div>
                                         <div className="autor-infor">
                                             <div className="author-title">
-                                                Donaton: {item.createBy?.firstName} {item.createBy?.lastName}
+                                                Donator: {item.createBy?.firstName} {item.createBy?.lastName}
                                             </div>
                                         </div>
                                         <div className="last-updated-on">

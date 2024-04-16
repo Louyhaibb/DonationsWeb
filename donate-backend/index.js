@@ -45,11 +45,13 @@ const authRoute = require('./routes/auth');
 const userRoute = require('./routes/users');
 const itemRoute = require('./routes/items');
 const itemRequestRoute = require('./routes/itemRequests');
+const dashboardRoute = require('./routes/dashboard');
 
 app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/items', itemRoute);
 app.use('/api/itemRequests', itemRequestRoute);
+app.use('/api/dashboard', dashboardRoute);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
