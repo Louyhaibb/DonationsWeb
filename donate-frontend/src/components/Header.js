@@ -37,6 +37,11 @@ const Header = () => {
         }
     }, []);
 
+    const handleLogout = async () => {
+        dispatch(logout());
+        window.location.href = '/sign-in'
+    }
+
     return (
         <header>
             <div className="container-fluid">
@@ -90,7 +95,7 @@ const Header = () => {
                                             <img src={userData.avatar ? userData.avatar : userImg} alt="user" className="user-img" />
                                         </DropdownToggle>
                                         <DropdownMenu end>
-                                            <DropdownItem tag={Link} onClick={() => dispatch(logout())}>
+                                            <DropdownItem tag={Link} onClick={handleLogout}>
                                                 <LogOut size={14} className="mr-50" />
                                                 <span className="align-middle mx-2">Log out</span>
                                             </DropdownItem>
@@ -115,7 +120,7 @@ const Header = () => {
                                             <img src={userData.avatar ? userData.avatar : userImg} alt="user" className="user-img" />
                                         </DropdownToggle>
                                         <DropdownMenu end>
-                                            <DropdownItem tag={Link} onClick={() => dispatch(logout())}>
+                                            <DropdownItem tag={Link} onClick={handleLogout}>
                                                 <LogOut size={14} className="mr-50" />
                                                 <span className="align-middle mx-2">Log out</span>
                                             </DropdownItem>
@@ -144,7 +149,7 @@ const Header = () => {
                                                 <User size={14} className="mr-50" />
                                                 <span className="align-middle mx-2">Profile</span>
                                             </DropdownItem>
-                                            <DropdownItem tag={Link} onClick={() => dispatch(logout())}>
+                                            <DropdownItem tag={Link} onClick={handleLogout}>
                                                 <LogOut size={14} className="mr-50" />
                                                 <span className="align-middle mx-2">Log out</span>
                                             </DropdownItem>

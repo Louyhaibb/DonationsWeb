@@ -1,21 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useState } from 'react';
-import DataTable from 'react-data-table-component';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import Select from 'react-select';
 import {
     Badge,
     Col,
     Container,
     Row,
-    UncontrolledDropdown,
-    DropdownToggle,
-    DropdownMenu,
-    DropdownItem,
     Card,
     CardBody,
+    Button,
 } from 'reactstrap';
-import { ChevronDown, MoreVertical, Eye } from 'react-feather';
 import { useGetItemsQuery } from '../../redux/api/itemAPI';
 
 const renderStatus = (row) => {
@@ -44,13 +39,6 @@ const renderStatus = (row) => {
             </Badge>
         </span>
     );
-};
-
-const renderImage = (row) => {
-    if (row.image) {
-        return <img src={row.image} alt="logo" className="img-fluid" />;
-    }
-    return (<></>);
 };
 
 const statusOptions = [
@@ -93,99 +81,30 @@ const colorOptions = [
 ];
 
 const DonateItems = () => {
-    const navigate = useNavigate();
-    const paginationRowsPerPageOptions = [15, 30, 50, 100];
+    const [visibleProductCount, setVisibleProductCount] = useState(8);
     const [currentStatus, setCurrentStatus] = useState({ value: '', label: 'Status...' });
     const [currentCondition, setCurrentCondition] = useState({ value: '', label: 'Condition...' });
     const [currentSize, setCurrentSize] = useState({ value: '', label: 'Size...' });
     const [currentColor, setCurrentColor] = useState({ value: '', label: 'Color...' });
+    const [itemList, setItemList] = useState([]);
     const queryParams = {
         status: currentStatus.value,
         condition: currentCondition.value,
         size: currentSize.value,
         color: currentColor.value,
     };
-    const { data: items } = useGetItemsQuery(queryParams, { refetchOnFocus: true, refetchOnReconnect: true });
+    const { data: items, refetch } = useGetItemsQuery(queryParams, { refetchOnFocus: true, refetchOnReconnect: true });
+    console.log(items)
 
-    const columns = () => [
-        {
-            name: '',
-            selector: (row) => renderImage(row),
-        },
-        {
-            name: 'Title',
-            sortable: true,
-            cell: ({ title }) => title,
-            selector: (row) => row.title
-        },
-        {
-            name: 'Description',
-            selector: (row) => `${row.description}`,
-            sortable: true,
-            cell: ({ description }) => {
-                if (description.length > 100) {
-                    return `${description.substring(0, 100)}...`;
-                } else {
-                    return description;
-                }
-            }
-        },
-        {
-            name: 'Condition',
-            selector: (row) => `${row.condition}`,
-            sortable: true,
-            cell: ({ condition }) => condition
-        },
-        {
-            name: 'Gender',
-            selector: (row) => `${row.gender}`,
-            sortable: true,
-            cell: ({ gender }) => gender
-        },
-        {
-            name: 'Size',
-            selector: (row) => `${row.size}`,
-            sortable: true,
-            cell: ({ size }) => size
-        },
-        {
-            name: 'Color',
-            selector: (row) => `${row.color}`,
-            sortable: true,
-            cell: ({ color }) => color
-        },
-        {
-            name: 'Status',
-            cell: (row) => renderStatus(row)
-        },
-        {
-            name: 'Actions',
-            minwidth: '120px',
-            cell: (row) => {
+    useEffect(() => {
+        refetch();
+    }, []);
 
-
-                return (
-                    <>
-                        {row.status !== 'deleted' && (
-                            <>
-                                <UncontrolledDropdown>
-                                    <DropdownToggle tag="div" className="btn btn-sm">
-                                        <MoreVertical size={14} className="cursor-pointer action-btn" />
-                                    </DropdownToggle>
-                                    <DropdownMenu end container="body">
-                                        <DropdownItem className="w-100" onClick={() => navigate(`/needy/donation-items/detail-item/${row._id}`)}>
-                                            <Eye size={14} className="mr-50" />
-                                            <span className="align-middle mx-2">View</span>
-                                        </DropdownItem>
-                                    </DropdownMenu>
-                                </UncontrolledDropdown>
-                            </>
-                        )}
-                    </>
-                );
-            }
+    useEffect(() => {
+        if (items) {
+            setItemList(items);
         }
-    ];
+    }, [items]);
 
     const handleStatusChange = (data) => {
         setCurrentStatus(data || { value: '', label: 'Status...' });
@@ -268,21 +187,72 @@ const DonateItems = () => {
                             </Col>
                         </Row>
                     </CardBody>
-                    <div className="react-dataTable">
-                        <DataTable
-                            title="Items"
-                            data={items}
-                            responsive
-                            className="react-dataTable"
-                            noHeader
-                            pagination
-                            paginationServer
-                            paginationRowsPerPageOptions={paginationRowsPerPageOptions}
-                            columns={columns()}
-                            sortIcon={<ChevronDown />}
-                        />
-                    </div>
+
                 </Card>
+                <Row className='mt-4'>
+                    {
+                        itemList.length > 0 ? (
+                            <>
+                                {itemList.slice(0, visibleProductCount).map((item, index) => (
+                                    <Col xs={12} sm={6} md={4} lg={3} key={index} className="mb-4 d-flex">
+                                        <div className="item-card overflow-hidden flex-fill d-flex flex-column">
+                                            <Link to={`/needy/donation-items/detail-item/${item._id}`}>
+                                                <div className="a-section a-spacing-base flex-fill d-flex flex-column">
+                                                    <div className="aok-relative text-center s-image-overlay-grey puis-image-overlay-grey s-padding-left-small s-padding-right-small puis-spacing-small" style={{ paddingTop: "0px !important" }}>
+                                                        <div className="a-section aok-relative s-image-square-aspect">
+                                                            <img className="s-image" src={item.image} alt="" />
+                                                        </div>
+                                                    </div>
+                                                    <div className="mt-3 flex-grow-1 d-flex flex-column">
+                                                        <div className="product-content flex-fill">
+                                                            <h5 className="text-center item-title" style={{ fontWeight: 'bold' }}>{item.title}</h5>
+                                                            <p className="text-center item-description">
+                                                                {item.description.length > 120 ? `${item.description.substring(0, 100)}...` : item.description}
+                                                            </p>
+                                                            <div className="text-center my-1 product-price" style={{ color: '#2c3e50', fontWeight: 'bold' }}>
+                                                                <span style={{ fontSize: '0.95rem' }}>Gender: {item.gender}</span>
+                                                            </div>
+                                                            <div className="text-center my-1 product-price" style={{ color: '#2c3e50', fontWeight: 'bold' }}>
+                                                                <span style={{ fontSize: '0.95rem' }}>Size: {item.size}</span>
+                                                            </div>
+                                                            <div className="text-center my-1 product-price" style={{ color: '#2c3e50', fontWeight: 'bold' }}>
+                                                                <span style={{ fontSize: '0.95rem' }}>Color: {item.color}</span>
+                                                            </div>
+                                                            <div className="text-center my-1 product-price" style={{ color: '#2c3e50', fontWeight: 'bold' }}>
+                                                                <span style={{ fontSize: '0.95rem' }}>Condtion: {item.condition}</span>
+                                                            </div>
+                                                            <div className="text-center my-1 product-stock">
+                                                                {renderStatus(item)}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </Link>
+
+                                        </div>
+                                    </Col>
+                                ))}
+                                {itemList.length > visibleProductCount && (
+                                    <div className="my-3 d-flex justify-content-center">
+                                        <Button
+                                            color='primary'
+                                            size='sm'
+                                            className="my-2"
+                                            onClick={() => setVisibleProductCount(visibleProductCount + 8)}
+                                        >
+                                            Load More
+                                        </Button>
+                                    </div>
+
+                                )}
+                            </>
+                        ) : (
+                            <Col xs={12} className="text-center">
+                                <p>No items found.</p>
+                            </Col>
+                        )
+                    }
+                </Row>
             </Container>
         </div>
     );
